@@ -14,12 +14,10 @@ import com.zk.paginglibraryexample.R
 import com.zk.paginglibraryexample.databinding.FragmentPhotoListBinding
 import com.zk.paginglibraryexample.model.Event
 import com.zk.paginglibraryexample.model.ListViewState
-import com.zk.paginglibraryexample.model.Photo
 import com.zk.paginglibraryexample.ui.list.adapter.PhotosRecyclerViewAdapter
-import com.zk.paginglibraryexample.ui.list.callback.OnItemClickListener
 import com.zk.paginglibraryexample.ui.list.style.VerticalSpaceItemDecoration
 import com.zk.paginglibraryexample.viewModel.MainViewModel
-import com.zk.testapp.ui.list.PhotosLoadStateAdapter
+import com.zk.paginglibraryexample.ui.list.PhotosLoadStateAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
@@ -30,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class PhotoListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
+class PhotoListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 	companion object {
 		private val TAG = PhotoListFragment::class.qualifiedName
@@ -41,11 +39,14 @@ class PhotoListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnIt
 
 	private lateinit var binding: FragmentPhotoListBinding
 
-	private val photosAdapter: PhotosRecyclerViewAdapter = PhotosRecyclerViewAdapter(listener = this)
-
 	// Lazy Inject ViewModel
 	private val viewModel by sharedViewModel<MainViewModel>()
 
+	private val photosAdapter: PhotosRecyclerViewAdapter = PhotosRecyclerViewAdapter{ item ->
+		run {
+			viewModel.onEvent(Event.ListItemClicked(item))
+		}
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -125,10 +126,5 @@ class PhotoListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnIt
 		lifecycleScope.launch {
 			viewModel.onSuspendedEvent(Event.ScreenLoad)
 		}
-	}
-
-	override fun onItemClick(item: Photo) {
-		// TODO: implement click
-		//viewModel.event(Event.ListItemClicked(item))
 	}
 }

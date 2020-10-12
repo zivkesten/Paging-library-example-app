@@ -1,6 +1,7 @@
 package com.zk.paginglibraryexample.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.zk.paginglibraryexample.R
 import com.zk.paginglibraryexample.model.ViewEffect
@@ -34,7 +35,8 @@ class MainActivity : AppCompatActivity() {
     private fun trigger(effect: ViewEffect) {
         when(effect) {
             is ViewEffect.TransitionToScreen -> {
-                TODO( "implement second screen")
+                //TODO( "implement second screen")
+                Toast.makeText(this, "Tap on ${effect.photo.userName}", Toast.LENGTH_SHORT).show()
 //                val intent = Intent(this, SinglePhotoActivity::class.java)
 //                intent.putExtra(getString(R.string.extra_item), effect.article)
 //                startActivity(intent)

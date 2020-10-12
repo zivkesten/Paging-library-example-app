@@ -31,20 +31,11 @@ import com.zk.paginglibraryexample.model.Photo
 /**
  * View Holder for a [Photo] RecyclerView list item.
  */
-class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class PhotoViewHolder(view: View, private val tapAction: (item: Photo) -> Unit) : RecyclerView.ViewHolder(view) {
     private val name: TextView = view.findViewById(R.id.primary_text)
     private val description: TextView = view.findViewById(R.id.sub_text)
     private val media: ImageView = view.findViewById(R.id.media_image)
     private var photo: Photo? = null
-
-    init {
-        view.setOnClickListener {
-            photo?.previewURL?.let { url ->
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                view.context.startActivity(intent)
-            }
-        }
-    }
 
     fun bind(photo: Photo?) {
         if (photo == null) {
@@ -64,13 +55,15 @@ class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         Picasso.get()
             .load(photo.previewURL)
             .into(media)
+
+        this.itemView.setOnClickListener { tapAction.invoke(photo) }
     }
 
     companion object {
-        fun create(parent: ViewGroup): PhotoViewHolder {
+        fun create(parent: ViewGroup, tapAction: (item: Photo) -> Unit): PhotoViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.photo_list_item, parent, false)
-            return PhotoViewHolder(view)
+            return PhotoViewHolder(view, tapAction)
         }
     }
 }

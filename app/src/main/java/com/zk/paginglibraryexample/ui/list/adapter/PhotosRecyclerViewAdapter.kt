@@ -4,11 +4,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.zk.paginglibraryexample.model.Photo
-import com.zk.paginglibraryexample.ui.list.callback.OnItemClickListener
 import com.zk.paginglibraryexample.ui.list.types.PhotoViewHolder
 
 class PhotosRecyclerViewAdapter(
-    private val listener: OnItemClickListener
+    private val tapAction: (item: Photo) -> Unit
 ) : PagingDataAdapter<Photo, PhotoViewHolder>(PHOTO_COMPARATOR) {
 
     companion object {
@@ -22,7 +21,7 @@ class PhotosRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        return PhotoViewHolder.create(parent)
+        return PhotoViewHolder.create(parent, tapAction)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
